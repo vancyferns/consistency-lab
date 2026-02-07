@@ -36,40 +36,40 @@ export default function Navbar() {
                 boxShadow: scrolled ? '0 4px 20px rgba(0,0,0,0.4)' : 'none'
             }}
         >
-            <div className="container mx-auto px-4">
-                <div className="flex items-center justify-between h-16">
+            <div className="container mx-auto px-3 sm:px-4 lg:px-6">
+                <div className="flex items-center justify-between h-20 sm:h-24">
                     {/* Logo - Minecraft Style */}
-                    <Link href="/dashboard" className="flex items-center gap-3 group">
+                    <Link href="/dashboard" className="flex items-center gap-2 sm:gap-3 group">
                         <motion.div
                             whileHover={{ scale: 1.1, rotate: [0, -5, 5, 0] }}
                             transition={{ duration: 0.3 }}
                             className="relative"
                         >
                             <div
-                                className="w-10 h-10 rounded border-2 border-amber-600 flex items-center justify-center"
+                                className="w-11 h-11 sm:w-12 sm:h-12 rounded border-2 sm:border-3 border-amber-600 flex items-center justify-center"
                                 style={{
                                     background: 'linear-gradient(135deg, #78350f 0%, #451a03 100%)',
                                     boxShadow: '0 2px 0 #78350f, inset 0 1px 1px rgba(255,255,255,0.2)'
                                 }}
                             >
-                                <span className="text-xl">⚔️</span>
+                                <span className="text-2xl sm:text-3xl">⚔️</span>
                             </div>
                         </motion.div>
                         <div>
                             <h1
-                                className="font-bold text-lg text-amber-100 tracking-wide"
-                                style={{ fontFamily: 'monospace', letterSpacing: '2px' }}
+                                className="font-bold text-base sm:text-lg lg:text-xl text-amber-100 tracking-wide leading-tight"
+                                style={{ fontFamily: 'monospace', letterSpacing: '1.5px' }}
                             >
                                 CONSISTENCY LAB
                             </h1>
-                            <p className="text-[10px] text-stone-400 tracking-widest" style={{ fontFamily: 'monospace' }}>
+                            <p className="text-[9px] sm:text-[10px] text-stone-400 tracking-widest" style={{ fontFamily: 'monospace' }}>
                                 LEVEL UP YOUR LEARNING
                             </p>
                         </div>
                     </Link>
 
                     {/* Desktop Navigation */}
-                    <div className="hidden md:flex items-center gap-2">
+                    <div className="hidden md:flex items-center gap-3 lg:gap-4">
                         {navLinks.map((link) => {
                             const Icon = link.icon
                             const isActive = pathname === link.href
@@ -78,17 +78,17 @@ export default function Navbar() {
                                     <motion.div
                                         whileHover={{ scale: 1.05 }}
                                         whileTap={{ scale: 0.95 }}
-                                        className={`px-4 py-2 rounded border-2 flex items-center gap-2 transition-all ${isActive
-                                                ? 'bg-amber-700 border-amber-500 text-amber-100'
+                                        className={`px-4 lg:px-5 py-2.5 lg:py-3 rounded-lg border-2 flex items-center gap-2 lg:gap-2.5 transition-all ${isActive
+                                                ? 'bg-amber-700 border-amber-500 text-amber-100 shadow-lg shadow-amber-900/50'
                                                 : 'bg-stone-800 border-stone-600 text-stone-300 hover:bg-stone-700 hover:border-stone-500 hover:text-stone-100'
                                             }`}
                                         style={{
                                             fontFamily: 'monospace',
-                                            boxShadow: isActive ? '0 2px 0 #78350f' : '0 2px 0 #1c1917'
+                                            boxShadow: isActive ? '0 3px 0 #78350f' : '0 2px 0 #1c1917'
                                         }}
                                     >
-                                        <Icon className="w-4 h-4" />
-                                        <span className="text-sm font-bold">{link.label.toUpperCase()}</span>
+                                        <Icon className="w-4 h-4 lg:w-5 lg:h-5" />
+                                        <span className="text-sm lg:text-base font-bold">{link.label.toUpperCase()}</span>
                                     </motion.div>
                                 </Link>
                             )
@@ -96,8 +96,10 @@ export default function Navbar() {
                     </div>
 
                     {/* Right Side */}
-                    <div className="flex items-center gap-3">
-                        <ThemeToggle />
+                    <div className="flex items-center gap-2 sm:gap-3 lg:gap-4">
+                        <div className="hidden sm:block">
+                            <ThemeToggle />
+                        </div>
                         <div className="hidden md:block">
                             <AuthButton />
                         </div>
@@ -106,7 +108,7 @@ export default function Navbar() {
                         <motion.button
                             whileTap={{ scale: 0.9 }}
                             onClick={() => setIsOpen(!isOpen)}
-                            className="md:hidden p-2 rounded border-2 border-stone-600 bg-stone-800 text-stone-300 hover:bg-stone-700"
+                            className="md:hidden p-2.5 rounded-lg border-2 border-stone-600 bg-stone-800 text-stone-300 hover:bg-stone-700 active:bg-stone-900"
                             style={{ boxShadow: '0 2px 0 #1c1917' }}
                         >
                             {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -128,7 +130,7 @@ export default function Navbar() {
                             borderTop: '2px solid #44403c'
                         }}
                     >
-                        <div className="container mx-auto px-4 py-4 space-y-2">
+                        <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-5 space-y-2 sm:space-y-3">
                             {navLinks.map((link, idx) => {
                                 const Icon = link.icon
                                 const isActive = pathname === link.href

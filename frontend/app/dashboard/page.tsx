@@ -197,21 +197,53 @@ export default function DashboardPage() {
                                 </div>
                             </motion.div>
 
-                            <Tabs defaultValue="youtube" className="w-full">
-                                <TabsList className="grid w-full grid-cols-2 mb-4 sm:mb-6 md:mb-8 h-auto">
-                                    <TabsTrigger value="youtube" className="text-sm sm:text-base py-3 px-2 sm:px-4">📺 YouTube Playlist</TabsTrigger>
-                                    <TabsTrigger value="notebook" className="text-sm sm:text-base py-3 px-2 sm:px-4">📄 Document (NotebookLM)</TabsTrigger>
-                                </TabsList>
-                                <TabsContent value="youtube">
-                                    <PlaylistAnalyzer
-                                        onAnalyzed={handlePlaylistAnalyzed}
-                                        onNext={moveToSchedule}
-                                    />
-                                </TabsContent>
-                                <TabsContent value="notebook">
-                                    <NotebookAnalyzer />
-                                </TabsContent>
-                            </Tabs>
+                            {/* Source Selection - Card Style */}
+                            <div className="mb-6 sm:mb-8">
+                                <motion.div
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm p-4 sm:p-6 rounded-2xl shadow-lg border border-slate-200/50 dark:border-slate-700/50"
+                                >
+                                    <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-slate-900 dark:text-white">
+                                        🎯 Choose Your Learning Source
+                                    </h3>
+                                    <Tabs defaultValue="youtube" className="w-full">
+                                        <TabsList className="grid w-full grid-cols-2 gap-3 bg-transparent h-auto p-0">
+                                            <TabsTrigger 
+                                                value="youtube" 
+                                                className="data-[state=active]:bg-gradient-to-br data-[state=active]:from-purple-600 data-[state=active]:to-blue-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-purple-500/30 data-[state=inactive]:bg-slate-100 data-[state=inactive]:dark:bg-slate-700/50 data-[state=inactive]:text-slate-700 data-[state=inactive]:dark:text-slate-300 rounded-xl py-4 sm:py-5 px-4 sm:px-6 transition-all duration-300 hover:scale-105 border-2 data-[state=active]:border-purple-400 data-[state=inactive]:border-slate-300 dark:data-[state=inactive]:border-slate-600"
+                                            >
+                                                <div className="flex flex-col items-center gap-2">
+                                                    <span className="text-2xl sm:text-3xl">📺</span>
+                                                    <span className="text-sm sm:text-base font-bold">YouTube Playlist</span>
+                                                    <span className="text-xs opacity-80">Analyze & schedule videos</span>
+                                                </div>
+                                            </TabsTrigger>
+                                            <TabsTrigger 
+                                                value="notebook" 
+                                                className="data-[state=active]:bg-gradient-to-br data-[state=active]:from-green-600 data-[state=active]:to-emerald-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-green-500/30 data-[state=inactive]:bg-slate-100 data-[state=inactive]:dark:bg-slate-700/50 data-[state=inactive]:text-slate-700 data-[state=inactive]:dark:text-slate-300 rounded-xl py-4 sm:py-5 px-4 sm:px-6 transition-all duration-300 hover:scale-105 border-2 data-[state=active]:border-green-400 data-[state=inactive]:border-slate-300 dark:data-[state=inactive]:border-slate-600"
+                                            >
+                                                <div className="flex flex-col items-center gap-2">
+                                                    <span className="text-2xl sm:text-3xl">📄</span>
+                                                    <span className="text-sm sm:text-base font-bold">Document</span>
+                                                    <span className="text-xs opacity-80">NotebookLM style</span>
+                                                </div>
+                                            </TabsTrigger>
+                                        </TabsList>
+                                        <div className="mt-6">
+                                            <TabsContent value="youtube" className="mt-0">
+                                                <PlaylistAnalyzer
+                                                    onAnalyzed={handlePlaylistAnalyzed}
+                                                    onNext={moveToSchedule}
+                                                />
+                                            </TabsContent>
+                                            <TabsContent value="notebook" className="mt-0">
+                                                <NotebookAnalyzer />
+                                            </TabsContent>
+                                        </div>
+                                    </Tabs>
+                                </motion.div>
+                            </div>
                         </>
                     )}
 

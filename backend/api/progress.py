@@ -64,21 +64,25 @@ def mark_video_complete():
         
         # Upsert Video Progress
         # We use upsert to handle both new and existing records
+        # Schema: user_id, youtube_video_id, playlist_id, completed, etc.
         progress_data = {
             'user_id': user_id,
-            'video_id': video_id,
+            'youtube_video_id': video_id, # Map frontend video_id to schema youtube_video_id
             'playlist_id': playlist_id,
             'completed': completed,
-            'updated_at': datetime.now().isoformat()
+            'last_watched': datetime.now().isoformat()
         }
         
         if completed:
-            progress_data['completed_at'] = datetime.now().isoformat()
-            progress_data['progress_percent'] = 100
+            # No 'completed_at' column in schema, relying on last_watched + completed=True
+            progress_data['completed'] = True
+            # progress_data['progress_percent'] = 100 # Not in schema, ignore
         else:
-            progress_data['progress_percent'] = 0
+            progress_data['completed'] = False
+            # progress_data['progress_percent'] = 0 # Not in schema, ignore
             
-        supabase.table('video_progress').upsert(progress_data, on_conflict='user_id, video_id, playlist_id').execute()
+        # Unique constraint is usually (user_id, youtube_video_id)
+        supabase.table('video_progress').upsert(progress_data, on_conflict='user_id, youtube_video_id').execute()
         
         # Log consistency
         if completed:
@@ -86,13 +90,15 @@ def mark_video_complete():
             # Simple consistency: Any activity today counts.
             today = datetime.now().date().isoformat()
             
-            # Insert log
+            # Insert log into consistency_logs
+            # Schema: user_id, activity_type, video_id (as text), playlist_id (UUID), date, duration_minutes
             log_data = {
                 'user_id': user_id,
                 'activity_type': 'video_completed',
                 'video_id': video_id,
                 'playlist_id': playlist_id,
-                'date': today
+                'date': today,
+                'duration_minutes': 0 # Or actual duration if we have it
             }
             supabase.table('consistency_logs').insert(log_data).execute()
         
@@ -120,15 +126,15 @@ def log_study_session():
         if not all([user_id, duration_minutes]):
             return jsonify({'error': 'Missing required fields'}), 400
         
-        # TODO: Save to Supabase
-        # supabase.table('consistency_logs').insert({
-        #     'user_id': user_id,
-        #     'activity_type': 'study_session',
-        #     'duration_minutes': duration_minutes,
-        #     'notes': notes,
-        #     'playlist_id': playlist_id,
-        #     'date': datetime.now().date().isoformat()
-        # }).execute()
+        # Save to Supabase
+        supabase.table('consistency_logs').insert({
+            'user_id': user_id,
+            'activity_type': 'study_session',
+            'duration_minutes': duration_minutes,
+            'notes': notes,
+            'playlist_id': playlist_id,
+            'date': datetime.now().date().isoformat()
+        }).execute()
         
         return jsonify({
             'success': True,

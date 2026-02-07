@@ -7,14 +7,16 @@ import { Zap, Trophy, Flame, Heart, Shield } from 'lucide-react'
 interface GamificationStatsProps {
     level: number
     xp: number
+    xpInCurrentLevel?: number  // Optional for backwards compatibility
     nextLevelXp: number
     streak: number
     totalVideos: number
 }
 
-export default function GamificationStats({ level, xp, nextLevelXp, streak, totalVideos }: GamificationStatsProps) {
-    const displayProgress = (xp % 500) / 500 * 100
-    const currentLevelXp = xp % 500
+export default function GamificationStats({ level, xp, xpInCurrentLevel, nextLevelXp, streak, totalVideos }: GamificationStatsProps) {
+    // Use xpInCurrentLevel if provided, otherwise fallback to old calculation
+    const currentLevelXp = xpInCurrentLevel ?? (xp % 500)
+    const displayProgress = (currentLevelXp / nextLevelXp) * 100
 
     const getTitle = (lvl: number) => {
         if (lvl <= 5) return 'Apprentice'
@@ -66,7 +68,7 @@ export default function GamificationStats({ level, xp, nextLevelXp, streak, tota
                         <span className="text-amber-300 flex items-center gap-1">
                             <Zap className="w-3 h-3" /> EXPERIENCE
                         </span>
-                        <span className="text-green-400">{currentLevelXp} / 500 XP</span>
+                        <span className="text-green-400">{currentLevelXp} / {nextLevelXp} XP</span>
                     </div>
                     <div
                         className="relative h-5 rounded border-2 border-stone-800 overflow-hidden"
@@ -141,11 +143,14 @@ export default function GamificationStats({ level, xp, nextLevelXp, streak, tota
                     </div>
                 </div>
 
-                {/* Total XP */}
-                <div className="text-center pt-2 border-t border-stone-700">
-                    <span className="text-xs text-stone-400" style={{ fontFamily: 'monospace' }}>
+                {/* Total XP & Level Info */}
+                <div className="text-center pt-2 border-t border-stone-700 space-y-1">
+                    <div className="text-xs text-stone-400" style={{ fontFamily: 'monospace' }}>
                         TOTAL XP: <span className="text-amber-400 font-bold">{xp.toLocaleString()}</span>
-                    </span>
+                    </div>
+                    <div className="text-xs text-stone-500" style={{ fontFamily: 'monospace' }}>
+                        Next Level: {500 - currentLevelXp} XP needed
+                    </div>
                 </div>
             </div>
         </div>

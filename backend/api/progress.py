@@ -427,14 +427,20 @@ def get_user_stats():
                 # If user skipped (last activity was before today), streak is 0
                 streak = 0
 
-        # XP Calculation
-        xp = (completed_videos * 100) + (total_sessions * 50)
-        level = int(xp / 500) + 1
+        # XP Calculation - Simple and Consistent
+        # 100 XP per completed video
+        # Every 500 XP = 1 level
+        xp = completed_videos * 100
+        level = (xp // 500) + 1  # Integer division
+        xp_in_current_level = xp % 500  # XP progress in current level
+        xp_needed_for_next = 500  # Always 500 XP per level
+        
         return jsonify({
             'success': True,
             'level': level,
-            'xp': xp,
-            'next_level_xp': level * 500,
+            'xp': xp,  # Total XP earned
+            'xp_in_current_level': xp_in_current_level,  # Progress toward next level
+            'next_level_xp': xp_needed_for_next,  # XP needed for next level (always 500)
             'streak': streak,
             'total_videos': completed_videos
         })

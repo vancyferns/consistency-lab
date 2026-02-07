@@ -293,6 +293,7 @@ export default function DashboardPage() {
                                                 <GamificationStats
                                                     level={stats.level}
                                                     xp={stats.xp}
+                                                    xpInCurrentLevel={stats.xp_in_current_level}
                                                     nextLevelXp={stats.next_level_xp}
                                                     streak={stats.streak}
                                                     totalVideos={stats.total_videos}

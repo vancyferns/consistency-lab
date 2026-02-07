@@ -72,56 +72,56 @@ export default function DashboardPage() {
         <div className="min-h-screen">
             {/* Progress Steps */}
             <div className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-sm border-b border-slate-200/50 dark:border-slate-700/50 sticky top-16 z-10">
-                <div className="container mx-auto px-4 py-4">
-                    <div className="flex items-center justify-center gap-4 max-w-2xl mx-auto">
+                <div className="container mx-auto px-3 sm:px-4 py-3 sm:py-4">
+                    <div className="flex items-center justify-center gap-2 sm:gap-4 max-w-2xl mx-auto">
                         {/* Step 1 */}
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className={`flex items-center gap-2 cursor-pointer ${currentStep === 'analyze' ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-400 dark:text-slate-500'}`}
+                            className={`flex items-center gap-1.5 sm:gap-2 cursor-pointer min-w-0 ${currentStep === 'analyze' ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-400 dark:text-slate-500'}`}
                             onClick={() => setCurrentStep('analyze')}
                         >
-                            <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold transition-all ${currentStep === 'analyze' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/30' :
+                            <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-bold transition-all flex-shrink-0 ${currentStep === 'analyze' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/30' :
                                 playlistData ? 'bg-green-600 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
                                 }`}>
                                 {playlistData ? '✓' : '1'}
                             </div>
-                            <span className="hidden sm:inline font-medium">Analyze Playlist</span>
+                            <span className="hidden sm:inline font-medium text-sm truncate">Analyze Playlist</span>
                         </motion.div>
 
-                        <div className="w-8 md:w-16 h-0.5 bg-slate-200 dark:bg-slate-700"></div>
+                        <div className="w-6 sm:w-8 md:w-16 h-0.5 bg-slate-200 dark:bg-slate-700 flex-shrink-0"></div>
 
                         {/* Step 2 */}
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.1 }}
-                            className={`flex items-center gap-2 cursor-pointer ${currentStep === 'schedule' ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-400 dark:text-slate-500'}`}
+                            className={`flex items-center gap-1.5 sm:gap-2 cursor-pointer min-w-0 ${currentStep === 'schedule' ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-400 dark:text-slate-500'}`}
                             onClick={() => playlistData && setCurrentStep('schedule')}
                         >
-                            <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold transition-all ${currentStep === 'schedule' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/30' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
+                            <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-bold transition-all flex-shrink-0 ${currentStep === 'schedule' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/30' : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
                                 }`}>
                                 2
                             </div>
-                            <span className="hidden sm:inline font-medium">Create Schedule</span>
+                            <span className="hidden sm:inline font-medium text-sm truncate">Create Schedule</span>
                         </motion.div>
 
-                        <div className="w-16 h-0.5 bg-gray-300"></div>
+                        <div className="w-6 sm:w-8 md:w-16 h-0.5 bg-gray-300 flex-shrink-0"></div>
 
                         {/* Step 3 */}
-                        <div className={`flex items-center gap-2 ${currentStep === 'track' ? 'text-blue-600' : 'text-gray-400'}`}>
-                            <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold ${currentStep === 'track' ? 'bg-blue-600 text-white' : 'bg-gray-300 text-gray-600'
+                        <div className={`flex items-center gap-1.5 sm:gap-2 min-w-0 ${currentStep === 'track' ? 'text-blue-600' : 'text-gray-400'}`}>
+                            <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-bold flex-shrink-0 ${currentStep === 'track' ? 'bg-blue-600 text-white' : 'bg-gray-300 text-gray-600'
                                 }`}>
                                 3
                             </div>
-                            <span className="hidden sm:inline font-medium">Track Progress</span>
+                            <span className="hidden sm:inline font-medium text-sm truncate">Track Progress</span>
                         </div>
                     </div>
                 </div>
             </div>
 
             {/* Main Content */}
-            <main className="container mx-auto px-4 py-8">
+            <main className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 md:py-8">
                 <div className="max-w-5xl mx-auto">
                     {/* Step 1: Analyze */}
                     {currentStep === 'analyze' && (
@@ -130,10 +130,10 @@ export default function DashboardPage() {
                             <motion.div
                                 initial={{ opacity: 0, scale: 0.95 }}
                                 animate={{ opacity: 1, scale: 1 }}
-                                className="relative rounded-lg overflow-hidden mb-8"
+                                className="relative rounded-lg overflow-hidden mb-4 sm:mb-6 md:mb-8"
                                 style={{
                                     background: 'linear-gradient(135deg, #78350f 0%, #451a03 50%, #292524 100%)',
-                                    border: '4px solid #d97706',
+                                    border: '3px solid #d97706',
                                     boxShadow: '0 0 0 2px #78350f, 0 10px 40px rgba(0,0,0,0.4)'
                                 }}
                             >
@@ -145,20 +145,20 @@ export default function DashboardPage() {
                                         backgroundSize: '8px 8px'
                                     }}
                                 />
-                                <div className="relative z-10 p-6 md:p-8">
-                                    <div className="flex items-center gap-3 mb-3">
+                                <div className="relative z-10 p-4 sm:p-6 md:p-8">
+                                    <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
                                         <motion.span
-                                            className="text-4xl"
+                                            className="text-3xl sm:text-4xl"
                                             animate={{ rotate: [0, 10, -10, 0] }}
                                             transition={{ repeat: Infinity, duration: 2, repeatDelay: 3 }}
                                         >
                                             ⚔️
                                         </motion.span>
                                         <h2
-                                            className="text-2xl md:text-3xl font-bold"
+                                            className="text-xl sm:text-2xl md:text-3xl font-bold leading-tight"
                                             style={{
                                                 fontFamily: 'monospace',
-                                                letterSpacing: '2px',
+                                                letterSpacing: '1px',
                                                 textShadow: '2px 2px 0 #000',
                                                 color: '#fef3c7'
                                             }}
@@ -166,10 +166,10 @@ export default function DashboardPage() {
                                             WELCOME, ADVENTURER!
                                         </h2>
                                     </div>
-                                    <p style={{ fontFamily: 'monospace', color: '#fde68a', marginBottom: '20px' }}>
+                                    <p className="text-sm sm:text-base mb-3 sm:mb-4" style={{ fontFamily: 'monospace', color: '#fde68a' }}>
                                         Begin your quest by analyzing a YouTube playlist. Earn XP and level up!
                                     </p>
-                                    <div className="flex flex-wrap gap-3">
+                                    <div className="flex flex-wrap gap-2 sm:gap-3">
                                         {[
                                             { emoji: '✨', label: 'AI POWER' },
                                             { emoji: '📅', label: 'SCHEDULER' },
@@ -198,9 +198,9 @@ export default function DashboardPage() {
                             </motion.div>
 
                             <Tabs defaultValue="youtube" className="w-full">
-                                <TabsList className="grid w-full grid-cols-2 mb-8">
-                                    <TabsTrigger value="youtube">📺 YouTube Playlist</TabsTrigger>
-                                    <TabsTrigger value="notebook">📄 Document (NotebookLM)</TabsTrigger>
+                                <TabsList className="grid w-full grid-cols-2 mb-4 sm:mb-6 md:mb-8 h-auto">
+                                    <TabsTrigger value="youtube" className="text-sm sm:text-base py-3 px-2 sm:px-4">📺 YouTube Playlist</TabsTrigger>
+                                    <TabsTrigger value="notebook" className="text-sm sm:text-base py-3 px-2 sm:px-4">📄 Document (NotebookLM)</TabsTrigger>
                                 </TabsList>
                                 <TabsContent value="youtube">
                                     <PlaylistAnalyzer

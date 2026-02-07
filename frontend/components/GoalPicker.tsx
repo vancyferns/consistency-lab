@@ -136,14 +136,14 @@ export default function GoalPicker({ totalDurationMinutes, playlistTitle, playli
                 <CardContent className="space-y-6">
                     {/* Study Days Selector */}
                     <div>
-                        <label className="block font-medium mb-3">Select Your Study Days</label>
-                        <div className="grid grid-cols-7 gap-2">
+                        <label className="block font-medium mb-3 text-sm sm:text-base">Select Your Study Days</label>
+                        <div className="grid grid-cols-7 gap-1.5 sm:gap-2">
                             {WEEKDAYS.map((day) => (
                                 <button
                                     key={day.id}
                                     onClick={() => toggleDay(day.id)}
                                     className={`
-                    p-3 rounded-lg border-2 transition-all text-sm font-medium
+                    p-2 sm:p-3 rounded-lg border-2 transition-all text-xs sm:text-sm font-medium min-h-[44px]
                     ${selectedDays.includes(day.id)
                                             ? 'bg-blue-600 text-white border-blue-600'
                                             : 'bg-white text-gray-700 border-gray-300 hover:border-blue-400'

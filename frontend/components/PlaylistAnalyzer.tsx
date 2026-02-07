@@ -120,21 +120,21 @@ export default function PlaylistAnalyzer({ onAnalyzed, onNext }: PlaylistAnalyze
                         Enter a playlist URL to begin your learning quest
                     </p>
                 </div>
-                <div className="p-4">
-                    <div className="flex gap-3">
+                <div className="p-3 sm:p-4">
+                    <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                         <input
                             type="text"
                             placeholder="https://www.youtube.com/playlist?list=PLxxx"
                             value={playlistUrl}
                             onChange={(e) => setPlaylistUrl(e.target.value)}
                             onKeyPress={(e) => e.key === 'Enter' && analyzePlaylist()}
-                            className="flex-1"
+                            className="flex-1 min-w-0"
                             style={{
                                 fontFamily: 'monospace',
                                 backgroundColor: '#1c1917',
                                 border: '2px solid #57534e',
                                 borderRadius: '6px',
-                                padding: '8px 12px',
+                                padding: '12px',
                                 color: '#f5f5f4',
                                 outline: 'none',
                                 fontSize: '14px'
@@ -143,7 +143,7 @@ export default function PlaylistAnalyzer({ onAnalyzed, onNext }: PlaylistAnalyze
                         <Button
                             onClick={analyzePlaylist}
                             disabled={loading || !playlistUrl}
-                            className="min-w-[140px] font-bold border-2 border-amber-500 text-amber-100"
+                            className="w-full sm:w-auto sm:min-w-[140px] font-bold border-2 border-amber-500 text-amber-100 py-3 h-auto"
                             style={{
                                 fontFamily: 'monospace',
                                 background: 'linear-gradient(180deg, #d97706 0%, #b45309 100%)',
@@ -190,8 +190,8 @@ export default function PlaylistAnalyzer({ onAnalyzed, onNext }: PlaylistAnalyze
                                 ID: {playlistData.playlist_id}
                             </p>
                         </div>
-                        <div className="p-4">
-                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div className="p-3 sm:p-4">
+                            <div className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4">
                                 {[
                                     { value: playlistData.video_count, label: 'VIDEOS', icon: '🎬' },
                                     { value: formatDuration(playlistData.total_duration_minutes), label: 'DURATION', icon: '⏱️' },

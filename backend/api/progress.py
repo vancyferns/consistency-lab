@@ -58,59 +58,65 @@ def mark_video_complete():
         video_id = data.get('video_id')
         playlist_id = data.get('playlist_id')
         completed = data.get('completed', True)
+        video_title = data.get('video_title', 'Untitled Video')
+        duration_seconds = data.get('duration_seconds', 0)
         
         if not all([user_id, video_id]):
             return jsonify({'error': 'Missing required fields'}), 400
         
+        print(f"Marking video {video_id} as completed={completed} for user {user_id}")
+        
         # Upsert Video Progress
-        # We use upsert to handle both new and existing records
-        # Schema: user_id, youtube_video_id, playlist_id, completed, etc.
         progress_data = {
             'user_id': user_id,
-            'youtube_video_id': video_id, # Map frontend video_id to schema youtube_video_id
+            'youtube_video_id': video_id,
             'playlist_id': playlist_id,
+            'video_title': video_title,
+            'duration_seconds': duration_seconds,
             'completed': completed,
             'last_watched': datetime.now().isoformat()
         }
         
         if completed:
-            # No 'completed_at' column in schema, relying on last_watched + completed=True
-            progress_data['completed'] = True
-            # progress_data['progress_percent'] = 100 # Not in schema, ignore
+            progress_data['current_position'] = duration_seconds
         else:
-            progress_data['completed'] = False
-            # progress_data['progress_percent'] = 0 # Not in schema, ignore
+            progress_data['current_position'] = 0
             
-        # Unique constraint is usually (user_id, youtube_video_id)
-        supabase.table('video_progress').upsert(progress_data, on_conflict='user_id, youtube_video_id').execute()
+        # Upsert with on_conflict
+        progress_result = supabase.table('video_progress').upsert(progress_data, on_conflict='user_id,youtube_video_id').execute()
+        print(f"Video progress upsert result: {progress_result}")
         
-        # Log consistency
+        # Log consistency - only when marking as completed
         if completed:
-            # Check if log already exists for today? Or just append. 
-            # Simple consistency: Any activity today counts.
             today = datetime.now().date().isoformat()
             
-            # Insert log into consistency_logs
-            # Schema: user_id, activity_type, video_id (as text), playlist_id (UUID), date, duration_minutes
-            log_data = {
-                'user_id': user_id,
-                'activity_type': 'video_completed',
-                'video_id': video_id,
-                'playlist_id': playlist_id,
-                'date': today,
-                'duration_minutes': 0 # Or actual duration if we have it
-            }
-            supabase.table('consistency_logs').insert(log_data).execute()
+            # Check if already logged today for this video
+            existing_log = supabase.table('consistency_logs').select('id').eq('user_id', user_id).eq('video_id', video_id).eq('date', today).execute()
+            
+            if not existing_log.data:
+                log_data = {
+                    'user_id': user_id,
+                    'activity_type': 'video_completed',
+                    'video_id': video_id,
+                    'playlist_id': playlist_id,
+                    'date': today,
+                    'duration_minutes': int(duration_seconds / 60) if duration_seconds else 0
+                }
+                log_result = supabase.table('consistency_logs').insert(log_data).execute()
+                print(f"Consistency log inserted: {log_result}")
+            else:
+                print(f"Activity already logged today for video {video_id}")
         
         return jsonify({
             'success': True,
             'completed': completed,
-            'message': 'Progress saved!'
+            'message': 'Progress saved! 🎯' if completed else 'Progress updated!'
         })
     
     except Exception as e:
         print(f"Error marking complete: {e}")
-        # Only log error but don't crash if it's just consistency log failure
+        import traceback
+        traceback.print_exc()
         return jsonify({'error': str(e)}), 500
 
 @bp.route('/log-session', methods=['POST'])
@@ -388,40 +394,37 @@ def get_user_stats():
         total_sessions = log_res.count 
         
         # 3. Calculate Streak
-        # Fetch unique dates from logs
+        # New logic: if current date matches last activity date, add 1, else reset to 0
         dates_res = supabase.table('consistency_logs').select('date').eq('user_id', user_id).order('date', desc=True).limit(50).execute()
         
         streak = 0
         if dates_res.data:
-            # Extract unique dates string
+            # Extract unique dates
             raw_dates = [d['date'] for d in dates_res.data]
             unique_dates = sorted(list(set(raw_dates)), reverse=True)
             
             today = datetime.now().date()
-            yesterday = today - timedelta(days=1)
-            
-            # Check if streak is active (logged today or yesterday)
-            is_active = False
             last_logged_date_str = unique_dates[0]
             last_logged_date = datetime.strptime(last_logged_date_str, '%Y-%m-%d').date()
             
-            if last_logged_date >= yesterday:
-                is_active = True
+            # If user logged activity today, count consecutive days
+            if last_logged_date == today:
                 streak = 1
                 current_check = last_logged_date
                 
-                # Iterate backwards
+                # Count backwards for consecutive days
                 for i in range(1, len(unique_dates)):
                     prev_date_str = unique_dates[i]
                     prev_date = datetime.strptime(prev_date_str, '%Y-%m-%d').date()
                     
-                    diff = (current_check - prev_date).days
-                    if diff == 1:
+                    expected_prev = current_check - timedelta(days=1)
+                    if prev_date == expected_prev:
                         streak += 1
                         current_check = prev_date
                     else:
                         break
             else:
+                # If user skipped (last activity was before today), streak is 0
                 streak = 0
 
         # XP Calculation

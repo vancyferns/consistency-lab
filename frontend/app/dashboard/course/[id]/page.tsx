@@ -72,7 +72,9 @@ export default function CourseDetailPage() {
                     user_id: user.id,
                     video_id: video.video_id,
                     playlist_id: playlistId,
-                    completed: newStatus
+                    completed: newStatus,
+                    video_title: video.title || video.video_title || 'Untitled Video',
+                    duration_seconds: video.duration_seconds || video.duration || 0
                 })
             })
 

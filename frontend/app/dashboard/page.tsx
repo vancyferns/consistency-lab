@@ -231,14 +231,14 @@ export default function DashboardPage() {
                                                 </div>
                                             </TabsTrigger>
                                         </TabsList>
-                                        <div className="mt-4 sm:mt-6">
-                                            <TabsContent value="youtube" className="mt-0">
+                                        <div className="mt-6 sm:mt-8 md:mt-10">
+                                            <TabsContent value="youtube" className="mt-0 pt-0">
                                                 <PlaylistAnalyzer
                                                     onAnalyzed={handlePlaylistAnalyzed}
                                                     onNext={moveToSchedule}
                                                 />
                                             </TabsContent>
-                                            <TabsContent value="notebook" className="mt-0">
+                                            <TabsContent value="notebook" className="mt-0 pt-0">
                                                 <NotebookAnalyzer />
                                             </TabsContent>
                                         </div>

@@ -18,12 +18,6 @@ interface PlaylistData {
         duration_formatted: string
         thumbnail: string
     }>
-    ai_summary?: {
-        summary: string
-        key_topics: string[]
-        difficulty_level: string
-        learning_objectives: string[]
-    }
 }
 
 interface PlaylistAnalyzerProps {
@@ -36,7 +30,6 @@ export default function PlaylistAnalyzer({ onAnalyzed, onNext }: PlaylistAnalyze
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
     const [playlistData, setPlaylistData] = useState<PlaylistData | null>(null)
-    const [analyzingAI, setAnalyzingAI] = useState(false)
 
     const extractPlaylistId = (url: string): string | null => {
         // Handle both full URLs and just IDs
@@ -89,39 +82,6 @@ export default function PlaylistAnalyzer({ onAnalyzed, onNext }: PlaylistAnalyze
             setError(err.message || 'An error occurred while analyzing the playlist')
         } finally {
             setLoading(false)
-        }
-    }
-
-    const generateAISummary = async () => {
-        if (!playlistData || !playlistData.videos[0]) return
-
-        setAnalyzingAI(true)
-        try {
-            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
-            const response = await fetch(`${apiUrl}/api/ai/summarize`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    video_id: playlistData.videos[0].video_id
-                }),
-            })
-
-            if (!response.ok) {
-                throw new Error('Failed to generate AI summary')
-            }
-
-            const summary = await response.json()
-            setPlaylistData({
-                ...playlistData,
-                ai_summary: summary
-            })
-        } catch (err: any) {
-            console.error('AI summary error:', err)
-            setError('Could not generate AI summary. Transcript may not be available.')
-        } finally {
-            setAnalyzingAI(false)
         }
     }
 
@@ -259,99 +219,8 @@ export default function PlaylistAnalyzer({ onAnalyzed, onNext }: PlaylistAnalyze
                                     </div>
                                 ))}
                             </div>
-
-                            {/* AI Summary Button */}
-                            {!playlistData.ai_summary && (
-                                <div className="mt-6">
-                                    <Button
-                                        onClick={generateAISummary}
-                                        disabled={analyzingAI}
-                                        className="w-full font-bold border-2 border-purple-500 text-purple-100"
-                                        style={{
-                                            fontFamily: 'monospace',
-                                            background: 'linear-gradient(180deg, #7c3aed 0%, #5b21b6 100%)',
-                                            boxShadow: '0 3px 0 #4c1d95'
-                                        }}
-                                    >
-                                        {analyzingAI ? (
-                                            <>🤖 GENERATING AI SUMMARY...</>
-                                        ) : (
-                                            <>🤖 GENERATE AI ANALYSIS</>
-                                        )}
-                                    </Button>
-                                </div>
-                            )}
                         </div>
                     </div>
-
-                    {/* AI Summary Card - Minecraft Style */}
-                    {playlistData.ai_summary && (
-                        <div
-                            className="rounded-lg border-4 border-purple-600 overflow-hidden"
-                            style={{
-                                background: 'linear-gradient(180deg, #4c1d95 0%, #2e1065 100%)',
-                                boxShadow: '0 4px 0 #1e1b4b, 0 8px 20px rgba(0,0,0,0.3)'
-                            }}
-                        >
-                            <div
-                                className="p-4 border-b-2 border-purple-700"
-                                style={{ background: 'linear-gradient(90deg, #5b21b6 0%, #4c1d95 100%)' }}
-                            >
-                                <h3
-                                    className="font-bold text-lg text-purple-100 flex items-center gap-2"
-                                    style={{ fontFamily: 'monospace', letterSpacing: '1px', textShadow: '1px 1px 0 #000' }}
-                                >
-                                    <span>🤖</span>
-                                    AI-GENERATED ANALYSIS
-                                </h3>
-                            </div>
-                            <div className="p-4 space-y-4">
-                                <div>
-                                    <h4 className="font-semibold mb-2 text-purple-200" style={{ fontFamily: 'monospace' }}>📝 SUMMARY</h4>
-                                    <p className="text-purple-100" style={{ fontFamily: 'monospace', fontSize: '14px' }}>{playlistData.ai_summary.summary}</p>
-                                </div>
-
-                                <div>
-                                    <h4 className="font-semibold mb-2 text-purple-200" style={{ fontFamily: 'monospace' }}>🏷️ KEY TOPICS</h4>
-                                    <div className="flex flex-wrap gap-2">
-                                        {playlistData.ai_summary.key_topics.map((topic, idx) => (
-                                            <span
-                                                key={idx}
-                                                className="px-2 py-1 rounded border border-purple-400 bg-purple-800/50 text-purple-200 text-sm"
-                                                style={{ fontFamily: 'monospace' }}
-                                            >
-                                                {topic}
-                                            </span>
-                                        ))}
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <h4 className="font-semibold mb-2 text-purple-200" style={{ fontFamily: 'monospace' }}>⚔️ DIFFICULTY</h4>
-                                    <span
-                                        className={`px-3 py-1 rounded border text-sm font-bold ${playlistData.ai_summary.difficulty_level === 'Beginner' ? 'border-green-500 bg-green-800/50 text-green-300' :
-                                            playlistData.ai_summary.difficulty_level === 'Intermediate' ? 'border-yellow-500 bg-yellow-800/50 text-yellow-300' :
-                                                'border-red-500 bg-red-800/50 text-red-300'
-                                            }`}
-                                        style={{ fontFamily: 'monospace' }}
-                                    >
-                                        {playlistData.ai_summary.difficulty_level}
-                                    </span>
-                                </div>
-
-                                {playlistData.ai_summary.learning_objectives?.length > 0 && (
-                                    <div>
-                                        <h4 className="font-semibold mb-2 text-purple-200" style={{ fontFamily: 'monospace' }}>🎯 LEARNING OBJECTIVES</h4>
-                                        <ul className="list-disc list-inside space-y-1 text-purple-100" style={{ fontFamily: 'monospace', fontSize: '14px' }}>
-                                            {playlistData.ai_summary.learning_objectives.map((obj, idx) => (
-                                                <li key={idx}>{obj}</li>
-                                            ))}
-                                        </ul>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    )}
 
                     {/* Video List Card - Minecraft Style */}
                     <div

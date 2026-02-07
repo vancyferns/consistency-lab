@@ -326,7 +326,7 @@ def get_course_details(goal_id):
         progress_map = {}
         if progress_res.data:
             for p in progress_res.data:
-                progress_map[p['video_id']] = p
+                progress_map[p['youtube_video_id']] = p
         
         # 4. Merge Progress
         processed_videos = []

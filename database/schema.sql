@@ -46,10 +46,12 @@ CREATE TABLE video_progress (
 CREATE TABLE consistency_logs (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-    goal_id UUID NOT NULL REFERENCES goals(id) ON DELETE CASCADE,
-    scheduled_date DATE NOT NULL,
-    watched BOOLEAN DEFAULT FALSE,
-    minutes_watched INTEGER DEFAULT 0,
+    activity_type TEXT NOT NULL, -- e.g., 'video_completed', 'study_session'
+    video_id TEXT, -- YouTube Video ID
+    playlist_id UUID REFERENCES playlists(id) ON DELETE SET NULL,
+    date DATE NOT NULL, -- The date of activity (YYYY-MM-DD)
+    duration_minutes INTEGER DEFAULT 0,
+    notes TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
@@ -131,6 +133,7 @@ CREATE INDEX idx_playlists_user_id ON playlists(user_id);
 CREATE INDEX idx_goals_user_id ON goals(user_id);
 CREATE INDEX idx_video_progress_user_id ON video_progress(user_id);
 CREATE INDEX idx_consistency_logs_user_id ON consistency_logs(user_id);
+CREATE INDEX idx_consistency_logs_user_date ON consistency_logs(user_id, date);
 CREATE INDEX idx_ai_chat_history_user_id ON ai_chat_history(user_id);
 
 -- Vector similarity search index
@@ -164,6 +167,8 @@ CREATE POLICY "Users can update own progress" ON video_progress FOR UPDATE USING
 -- Consistency logs policies
 CREATE POLICY "Users can view own logs" ON consistency_logs FOR SELECT USING (auth.uid() = user_id);
 CREATE POLICY "Users can insert own logs" ON consistency_logs FOR INSERT WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "Users can update own logs" ON consistency_logs FOR UPDATE USING (auth.uid() = user_id);
+CREATE POLICY "Users can delete own logs" ON consistency_logs FOR DELETE USING (auth.uid() = user_id);
 
 -- Chat history policies
 CREATE POLICY "Users can view own chat" ON ai_chat_history FOR SELECT USING (auth.uid() = user_id);

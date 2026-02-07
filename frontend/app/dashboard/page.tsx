@@ -169,7 +169,7 @@ export default function DashboardPage() {
                                     <p className="text-sm sm:text-base mb-3 sm:mb-4" style={{ fontFamily: 'monospace', color: '#fde68a' }}>
                                         Begin your quest by analyzing a YouTube playlist. Earn XP and level up!
                                     </p>
-                                    <div className="flex flex-wrap gap-2 sm:gap-3">
+                                    <div className="flex flex-wrap gap-3 sm:gap-4 md:gap-5">
                                         {[
                                             { emoji: '✨', label: 'AI POWER' },
                                             { emoji: '📅', label: 'SCHEDULER' },
@@ -181,16 +181,17 @@ export default function DashboardPage() {
                                                 initial={{ opacity: 0, y: 10 }}
                                                 animate={{ opacity: 1, y: 0 }}
                                                 transition={{ delay: 0.1 * idx }}
-                                                className="flex items-center gap-2 px-3 py-1.5 rounded"
+                                                className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded"
                                                 style={{
                                                     fontFamily: 'monospace',
-                                                    fontSize: '12px',
+                                                    fontSize: '11px',
                                                     border: '2px solid #d97706',
-                                                    backgroundColor: 'rgba(120, 53, 15, 0.5)'
+                                                    backgroundColor: 'rgba(120, 53, 15, 0.5)',
+                                                    whiteSpace: 'nowrap'
                                                 }}
                                             >
-                                                <span>{item.emoji}</span>
-                                                <span style={{ color: '#fde68a', fontWeight: 'bold' }}>{item.label}</span>
+                                                <span className="text-sm sm:text-base">{item.emoji}</span>
+                                                <span style={{ color: '#fde68a', fontWeight: 'bold', fontSize: '11px' }} className="sm:text-xs">{item.label}</span>
                                             </motion.div>
                                         ))}
                                     </div>

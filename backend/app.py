@@ -8,7 +8,11 @@ load_dotenv()
 
 # Initialize Flask app
 app = Flask(__name__)
-CORS(app)
+frontend_url = os.getenv('FRONTEND_URL')
+if frontend_url:
+    CORS(app, origins=[frontend_url, "http://localhost:3000", "http://127.0.0.1:3000"])
+else:
+    CORS(app)
 
 # Configuration
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev-secret-key-change-in-production')

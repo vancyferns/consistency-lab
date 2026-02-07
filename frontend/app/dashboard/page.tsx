@@ -69,9 +69,9 @@ export default function DashboardPage() {
     }
 
     return (
-        <div className="min-h-screen">
+        <div className="min-h-screen pt-20 sm:pt-24">
             {/* Progress Steps */}
-            <div className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-sm border-b border-slate-200/50 dark:border-slate-700/50 sticky top-16 z-10">
+            <div className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-sm border-b border-slate-200/50 dark:border-slate-700/50 fixed top-20 sm:top-24 left-0 right-0 z-10">
                 <div className="container mx-auto px-3 sm:px-4 py-3 sm:py-4">
                     <div className="flex items-center justify-center gap-2 sm:gap-4 max-w-2xl mx-auto">
                         {/* Step 1 */}
@@ -198,7 +198,7 @@ export default function DashboardPage() {
                             </motion.div>
 
                             {/* Source Selection - Card Style */}
-                            <div className="mb-8 sm:mb-10">
+                            <div className="mb-10 sm:mb-12 md:mb-14">
                                 <motion.div
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
